@@ -42,17 +42,16 @@ const Room = () => {
     [socket]
   );
 
-
-  const sendStreams =useCallback(()=>{
+  const sendStreams = useCallback(() => {
     for (const track of myStream.getTracks()) {
       peer.peer.addTrack(track, myStream);
     }
-  },[myStream])
+  }, [myStream]);
 
   const handleCallAccepted = useCallback(
     ({ from, ans }) => {
       peer.setLocalDescription(ans);
-      sendStreams()
+      sendStreams();
     },
     [sendStreams]
   );
@@ -119,12 +118,14 @@ const Room = () => {
     <>
       <div>Room</div>
       <h1>{remoteSocketId ? "connected" : "no one in Room"}</h1>
-      {myStream &&  <button
+      {myStream && (
+        <button
           className="w-40 m-2 mx-20  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
           onClick={sendStreams}
         >
           Send Stream
-        </button> }
+        </button>
+      )}
       {remoteSocketId && (
         <button
           className="w-40 m-2 mx-20  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
@@ -133,38 +134,42 @@ const Room = () => {
           Call
         </button>
       )}
-      {
-        <>
-          {myStream && (
+      <div className="flex">
+        <div>
+          {
             <>
-              <h1>My stream</h1>
-              <ReactPlayer
-                width={300}
-                height={300}
-                url={myStream}
-                playing
-                muted
-              />
+              {myStream && (
+                <>
+                  <h1>My stream</h1>
+                  <ReactPlayer
+                    width={400}
+                    height={400}
+                    url={myStream}
+                    playing
+                  />
+                </>
+              )}
             </>
-          )}
-        </>
-      }
-      {
-        <>
-          {remoteStream && (
+          }
+        </div>
+        <div>
+          {
             <>
-              <h1>Remote stream</h1>
-              <ReactPlayer
-                width={300}
-                height={300}
-                url={remoteStream}
-                playing
-                muted
-              />
+              {remoteStream && (
+                <>
+                  <h1>Remote stream</h1>
+                  <ReactPlayer
+                    width={400}
+                    height={400}
+                    url={remoteStream}
+                    playing
+                  />
+                </>
+              )}
             </>
-          )}
-        </>
-      }
+          }
+        </div>
+      </div>
     </>
   );
 };
