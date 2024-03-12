@@ -8,6 +8,7 @@ const Room = () => {
   const [remoteSocketId, setRemoteSocketId] = useState(null);
   const [myStream, setMyStream] = useState();
   const [remoteStream, setRemoteStream] = useState();
+  const [callBtn, setCallBtn] = useState(true);
 
   const handleUserJoined = useCallback((data) => {
     const { email, id } = data;
@@ -116,8 +117,10 @@ const Room = () => {
 
   return (
     <>
-      <div>Room</div>
-      <h1>{remoteSocketId ? "connected" : "no one in Room"}</h1>
+      <div className="font-bold text-3xl">Room</div>
+      <p className="font-bold">
+        {remoteSocketId ? "Connected" : "no one in Room"}
+      </p>
       {myStream && (
         <button
           className="w-40 m-2 mx-20  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
@@ -126,26 +129,33 @@ const Room = () => {
           Send Stream
         </button>
       )}
-      {remoteSocketId && (
+      {remoteSocketId && callBtn && (
         <button
-          className="w-40 m-2 mx-20  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
-          onClick={handleCallUser}
+          className="w-40 m-2 mx-20 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
+          onClick={() => {
+            handleCallUser();
+            setCallBtn(false);
+          }}
         >
           Call
         </button>
       )}
-      <div className="flex">
-        <div>
+
+      <div className="grid grid-cols-2 w-full justify-items-center">
+        <div >
           {
             <>
               {myStream && (
                 <>
-                  <h1>My stream</h1>
+                  <h1 className="font-bold">My stream</h1>
                   <ReactPlayer
-                    width={400}
-                    height={400}
                     url={myStream}
                     playing
+                    muted
+                    controls
+                    width="max-content"
+                    height="max-content"
+                    style={{borderRadius:"10px",overflow:"hidden"}}
                   />
                 </>
               )}
@@ -157,13 +167,18 @@ const Room = () => {
             <>
               {remoteStream && (
                 <>
-                  <h1>Remote stream</h1>
-                  <ReactPlayer
-                    width={400}
-                    height={400}
-                    url={remoteStream}
-                    playing
-                  />
+                  <h1 className="font-bold">Remote stream</h1>
+                  <div className="player-wrapper">
+                    <ReactPlayer
+                      url={remoteStream}
+                      playing
+                      muted
+                      controls
+                      width="max-content"
+                      height="max-content"
+                      style={{borderRadius:"10px",overflow:"hidden"}}
+                    />
+                  </div>
                 </>
               )}
             </>
